@@ -29,7 +29,10 @@
     "puppeteer",
     "handlebars",
     "puppeteer-core",
-    "chrome-aws-lambda"
+    "chrome-aws-lambda",
+    "netlify",
+    "lambda",
+    "aws"
   ],
   "repository": {
     "type": "git",
