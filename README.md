@@ -14,7 +14,7 @@ The goal fo this fork is to make use of pupeteer-core instead of pupeteer, also 
 ## Installation
 
 ```sh
-npm install html-pdf-node
+npm install html-pdf-node-core
 ```
 
 ## Usage
