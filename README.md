@@ -9,7 +9,7 @@
 
 ## Goal
 
-The goal fo this fork is to make use of pupeteer-core instead of pupeteer
+The goal fo this fork is to make use of pupeteer-core instead of pupeteer, also using chrome-aws-lambda in order to be able to upload this function inside a netlify/aws lambda
 
 ## Installation
 
