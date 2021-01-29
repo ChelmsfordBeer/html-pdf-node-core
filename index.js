@@ -17,7 +17,7 @@ async function generatePdf(file, options, callback) {
 
   const browser = await chromium.puppeteer.launch({
     executablePath: await chromium.executablePath,
-    args: chromium.args,
+    args: args,
   });
 
   const page = await browser.newPage();
@@ -58,7 +58,7 @@ async function generatePdfs(files, options, callback) {
   
   const browser = await chromium.puppeteer.launch({
     executablePath: await chromium.executablePath,
-    args: chromium.args,
+    args: args,
   });
 
   let pdfs = [];
