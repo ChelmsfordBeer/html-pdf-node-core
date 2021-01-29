@@ -1,6 +1,6 @@
 {
   "name": "html-pdf-node-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert any html content or html page to PDF within a AWS lambda",
   "main": "index.js",
   "directories": {

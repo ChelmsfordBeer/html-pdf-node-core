@@ -1,4 +1,4 @@
-# html-pdf-node
+# html-pdf-node-core
 
 > Pagination plugin for converts html or url to pdf
 
