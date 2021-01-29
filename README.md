@@ -7,6 +7,10 @@
 **Note:** This plugin will convert html page or public URL into PDF. This will work with Node.js
 =======
 
+## Goal
+
+The goal fo this fork is to make use of pupeteer-core instead of pupeteer
+
 ## Installation
 
 ```sh
