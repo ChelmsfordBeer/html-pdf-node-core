@@ -1,7 +1,7 @@
 {
-  "name": "html-pdf-node",
-  "version": "1.0.7",
-  "description": "Convert any html content or html page to PDF",
+  "name": "html-pdf-node-core",
+  "version": "0.1.0",
+  "description": "Convert any html content or html page to PDF within a AWS lambda",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -13,26 +13,27 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.7.2",
+    "chrome-aws-lambda": "^5.5.0",
     "handlebars": "^4.7.6",
-    "puppeteer": "^5.1.0"
+    "puppeteer-core": "^5.5.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^8.0.1"
+    "mocha": "^8.2.1",
+    "puppeteer": "^5.5.0"
   },
   "keywords": [
     "html",
     "pdf",
     "nodejs",
     "puppeteer",
-    "handlebars"
+    "handlebars",
+    "puppeteer-core",
+    "chrome-aws-lambda"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mrafiqk/html-pdf-node.git"
+    "url": "git+https://github.com/MindInSky/html-pdf-node-core.git"
   },
-  "bugs": {
-    "url": "https://github.com/mrafiqk/html-pdf-node/issues"
-  },
-  "homepage": "https://github.com/mrafiqk/html-pdf-node#readme"
+  "homepage": "https://github.com/MindInSky/html-pdf-node-core#html-pdf-node"
 }
