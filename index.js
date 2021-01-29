@@ -1,6 +1,7 @@
-const puppeteer = require('puppeteer');
 var Promise = require('bluebird');
 const hb = require('handlebars')
+const puppeteer = require('puppeteer-core');
+const chromium = require('chrome-aws-lambda');
 
 module.exports
 async function generatePdf(file, options, callback) {
@@ -14,9 +15,11 @@ async function generatePdf(file, options, callback) {
     delete options.args;
   }
 
-  const browser = await puppeteer.launch({
-    args: args
+  const browser = await chromium.puppeteer.launch({
+    executablePath: await chromium.executablePath,
+    args: chromium.args,
   });
+
   const page = await browser.newPage();
 
   if(file.content) {
@@ -52,9 +55,12 @@ async function generatePdfs(files, options, callback) {
     args = options.args;
     delete options.args;
   }
-  const browser = await puppeteer.launch({
-    args: args
+  
+  const browser = await chromium.puppeteer.launch({
+    executablePath: await chromium.executablePath,
+    args: chromium.args,
   });
+
   let pdfs = [];
   const page = await browser.newPage();
   for(let file of files) {
