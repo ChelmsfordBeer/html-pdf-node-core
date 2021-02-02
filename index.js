@@ -6,19 +6,21 @@ const chromium = require('chrome-aws-lambda');
 module.exports
 async function generatePdf(file, options, callback) {
   // we are using headless mode
-  let args = [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-  ];
+  // let args = [
+  //   '--no-sandbox',
+  //   '--disable-setuid-sandbox',
+  // ];
   if(options.args) {
     args = options.args;
     delete options.args;
   }
 
   const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath,
-    args: args,
-    headless : true
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
 
   const page = await browser.newPage();
@@ -58,9 +60,11 @@ async function generatePdfs(files, options, callback) {
   }
   
   const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
     executablePath: await chromium.executablePath,
-    args: args,
-    headless : true
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
 
   let pdfs = [];
