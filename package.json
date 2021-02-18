@@ -1,6 +1,6 @@
 {
   "name": "html-pdf-node-core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Convert any html content or html page to PDF within a AWS lambda",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "mocha tests/*.js -R spec --ui bdd --timeout 5000"
   },
-  "author": "mrafiqk",
+  "author": "MindInsky <https://github.com/MindInSky>",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.7.2",

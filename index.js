@@ -10,10 +10,10 @@ async function generatePdf(file, options, callback) {
   //   '--no-sandbox',
   //   '--disable-setuid-sandbox',
   // ];
-  if(options.args) {
-    args = options.args;
-    delete options.args;
-  }
+  // if(options.args) { // * Keeping but is not in use
+  //   args = options.args;
+  //   delete options.args;
+  // }
 
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
@@ -34,6 +34,24 @@ async function generatePdf(file, options, callback) {
 
     // We set the page content as the generated html by handlebars
     await page.setContent(html);
+
+      // Get the "viewport" of the page, as reported by the page.
+    if ( options.singlePage === true ){
+      const dimensions = await page.evaluate(() => {
+        return {
+          height: document.documentElement.scrollHeight,
+        };
+      });
+
+      options.height = dimensions.height
+      options.width = options.width ? options.width : `8.5in` // if no width set, default to Letter
+      
+      if ( options.format !== undefined) {
+        options.format = undefined
+      }
+
+    }
+
   } else {
     await page.goto(file.url, {
       waitUntil: 'networkidle0', // wait for page to load completely
