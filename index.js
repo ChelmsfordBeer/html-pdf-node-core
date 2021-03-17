@@ -43,7 +43,7 @@ async function generatePdf(file, options, callback) {
         };
       });
 
-      options.height = dimensions.height
+      options.height = `${dimensions.height}px`
       options.width = options.width ? options.width : `8.5in` // if no width set, default to Letter
       
       if ( options.format !== undefined) {
