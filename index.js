@@ -52,13 +52,7 @@ async function generatePdf(file, options, callback, debug = false) {
 
       // Get the "viewport" of the page, as reported by the page.
     if ( options.singlePage === true ){
-      const dimensions = await page.evaluate(() => {
-        return {
-          height: document.documentElement.scrollHeight,
-        };
-      });
-
-      options.height = `${dimensions.height}px`
+      options.height = `${await page.evaluate(() => document.documentElement.scrollHeight)}px`
       options.width = options.width ? options.width : `8.5in` // if no width set, default to Letter
       
       if ( options.format !== undefined) {
@@ -69,12 +63,15 @@ async function generatePdf(file, options, callback, debug = false) {
 
   } else {
     if ( debug ){
-      console.log(`Compiling the template with no handlebars`)
       console.log(`Debug: received url: ${file.url}`)
     }
     await page.goto(file.url, {
       waitUntil: 'networkidle0', // wait for page to load completely
     });
+  }
+
+  if ( debug ) {
+    console.log(`Debug: options before promise: `, options)
   }
 
   return Promise.props(page.pdf(options))
