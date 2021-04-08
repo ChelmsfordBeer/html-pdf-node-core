@@ -15,6 +15,13 @@ async function generatePdf(file, options, callback, debug = false) {
   //   delete options.args;
   // }
 
+  if( debug ){
+    console.log(`Debug: `, debug)
+    console.log(`Callback: `, callback)
+    console.log(`Options: `, options)
+    console.log(`File: `, file)
+  }
+
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
     defaultViewport: chromium.defaultViewport,
@@ -78,7 +85,7 @@ async function generatePdf(file, options, callback, debug = false) {
     }).asCallback(callback);
 }
 
-async function generatePdfs(files, options, callback) {
+async function generatePdfs(files, options, callback, debug = false) {
   // we are using headless mode
   // let args = [
   //   '--no-sandbox',
@@ -88,6 +95,13 @@ async function generatePdfs(files, options, callback) {
   //   args = options.args;
   //   delete options.args;
   // }
+
+  if( debug ){
+    console.log(`Debug: `, debug)
+    console.log(`Callback: `, callback)
+    console.log(`Options: `, options)
+    console.log(`File: `, file)
+  }
   
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
