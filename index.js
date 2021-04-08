@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer-core');
 const chromium = require('chrome-aws-lambda');
 
 module.exports
-async function generatePdf(file, options, callback) {
+async function generatePdf(file, options, callback, debug = false) {
   // we are using headless mode
   // let args = [
   //   '--no-sandbox',
@@ -26,11 +26,19 @@ async function generatePdf(file, options, callback) {
   const page = await browser.newPage();
 
   if(file.content) {
-    console.log("Compiling the template with handlebars")
+
+    if ( debug ) {
+      console.log(`Compiling the template with handlebars`)
+      console.log(`Debug: received file: ${file.content}`)
+    }
     // we have compile our code with handlebars
     const template = hb.compile(file.content, { strict: true });
     const result = template(file.content);
     const html = result;
+
+    if ( debug ){
+      console.log(`Debug: resulting html: ${html}`)
+    }
 
     // We set the page content as the generated html by handlebars
     await page.setContent(html);
@@ -53,6 +61,10 @@ async function generatePdf(file, options, callback) {
     }
 
   } else {
+    if ( debug ){
+      console.log(`Compiling the template with no handlebars`)
+      console.log(`Debug: received url: ${file.url}`)
+    }
     await page.goto(file.url, {
       waitUntil: 'networkidle0', // wait for page to load completely
     });
@@ -68,14 +80,14 @@ async function generatePdf(file, options, callback) {
 
 async function generatePdfs(files, options, callback) {
   // we are using headless mode
-  let args = [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-  ];
-  if(options.args) {
-    args = options.args;
-    delete options.args;
-  }
+  // let args = [
+  //   '--no-sandbox',
+  //   '--disable-setuid-sandbox',
+  // ];
+  // if(options.args) {
+  //   args = options.args;
+  //   delete options.args;
+  // }
   
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
@@ -89,14 +101,26 @@ async function generatePdfs(files, options, callback) {
   const page = await browser.newPage();
   for(let file of files) {
     if(file.content) {
-      console.log("Compiling the template with handlebars")
+
+      if ( debug ){
+        console.log(`Compiling the template with no handlebars`)
+        console.log(`Debug: received content: ${file.content}`)
+      }
       // we have compile our code with handlebars
       const template = hb.compile(file.content, { strict: true });
       const result = template(file.content);
       const html = result;
+
+      if ( debug ){
+        console.log(`Debug: resulting html: ${html}`)
+      }
       // We set the page content as the generated html by handlebars
       await page.setContent(html);
     } else {
+      if ( debug ){
+        console.log(`Compiling the template with no handlebars`)
+        console.log(`Debug: received url: ${file.url}`)
+      }
       await page.goto(file.url, {
         waitUntil: 'networkidle0', // wait for page to load completely
       });
