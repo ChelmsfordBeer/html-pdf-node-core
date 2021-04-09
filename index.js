@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer-core');
 const chromium = require('chrome-aws-lambda');
 
 module.exports
-async function generatePdf({file, options, callback, debug = false}) {
+async function generatePdf({file, options, callback, testoption1= false, testoption2=false, debug = false}) {
   // we are using headless mode
   // let args = [
   //   '--no-sandbox',
@@ -52,8 +52,21 @@ async function generatePdf({file, options, callback, debug = false}) {
 
       // Get the "viewport" of the page, as reported by the page.
     if ( options.singlePage === true ){
-      options.height = `${await page.evaluate(() => document.documentElement.scrollHeight)}px`
-      options.width = options.width ? options.width : `8.5in` // if no width set, default to Letter
+
+      const temp = await page.evaluate(() => document.documentElement.scrollHeight)
+
+      if ( debug ) {
+        console.log(`Debug: temp height: ${temp}`)
+      }
+      // options.height = `${await page.evaluate(() => document.documentElement.scrollHeight)}px`
+      // options.width = options.width ? options.width : `8.5in` // if no width set, default to Letter
+      if ( testoption1 ) {
+        options.height = `${ temp / 90}in`
+      } else if ( testoption2 ) {
+        options.height = `${ temp / 85}in`
+      } else {
+        options.height = temp
+      }
       
       if ( options.format !== undefined) {
         options.format = undefined
