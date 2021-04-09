@@ -4,7 +4,7 @@ const puppeteer = require('puppeteer-core');
 const chromium = require('chrome-aws-lambda');
 
 module.exports
-async function generatePdf(file, options, callback, debug = false) {
+async function generatePdf({file, options, callback, debug = false}) {
   // we are using headless mode
   // let args = [
   //   '--no-sandbox',
