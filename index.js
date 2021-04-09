@@ -4,7 +4,15 @@ const puppeteer = require('puppeteer-core');
 const chromium = require('chrome-aws-lambda');
 
 module.exports
-async function generatePdf({file, options, callback, testoption1= false, testoption2=false, debug = false}) {
+async function generatePdf({
+  file, 
+  options, 
+  callback, 
+  custom = { 
+    logging : false , // to have extra logs while working, debugging issues
+    customHeightDivisor : false, // 85 is default when singlePage is on, but can be customized to fit needs
+  } }) {
+
   // we are using headless mode
   // let args = [
   //   '--no-sandbox',
@@ -15,8 +23,9 @@ async function generatePdf({file, options, callback, testoption1= false, testopt
   //   delete options.args;
   // }
 
-  if( debug ){
-    console.log(`Debug: `, debug)
+  if( custom.logging ){
+    console.log(`Custom.logging: ${custom.logging}`)
+    console.log(`Custom: `, custom)
     console.log(`Callback: `, callback)
     console.log(`Options: `, options)
     console.log(`File: `, file)
@@ -34,17 +43,17 @@ async function generatePdf({file, options, callback, testoption1= false, testopt
 
   if(file.content) {
 
-    if ( debug ) {
+    if ( custom.logging ) {
       console.log(`Compiling the template with handlebars`)
-      console.log(`Debug: received file: ${file.content}`)
+      console.log(`Logging: received file: ${file.content}`)
     }
     // we have compile our code with handlebars
     const template = hb.compile(file.content, { strict: true });
     const result = template(file.content);
     const html = result;
 
-    if ( debug ){
-      console.log(`Debug: resulting html: ${html}`)
+    if ( custom.logging ){
+      console.log(`Logging: resulting html: ${html}`)
     }
 
     // We set the page content as the generated html by handlebars
@@ -55,18 +64,11 @@ async function generatePdf({file, options, callback, testoption1= false, testopt
 
       const temp = await page.evaluate(() => document.documentElement.scrollHeight)
 
-      if ( debug ) {
-        console.log(`Debug: temp height: ${temp}`)
+      if ( custom.logging ) {
+        console.log(`Logging: temp height: ${temp}`)
       }
-      // options.height = `${await page.evaluate(() => document.documentElement.scrollHeight)}px`
-      // options.width = options.width ? options.width : `8.5in` // if no width set, default to Letter
-      if ( testoption1 ) {
-        options.height = `${ temp / 90}in`
-      } else if ( testoption2 ) {
-        options.height = `${ temp / 85}in`
-      } else {
-        options.height = temp
-      }
+
+      options.height = `${ temp / ( custom.customHeightDivisor !== false ? custom.customHeightDivisor : 75) }in`
       
       if ( options.format !== undefined) {
         options.format = undefined
@@ -75,16 +77,16 @@ async function generatePdf({file, options, callback, testoption1= false, testopt
     }
 
   } else {
-    if ( debug ){
-      console.log(`Debug: received url: ${file.url}`)
+    if ( custom.logging ){
+      console.log(`Logging: received url: ${file.url}`)
     }
     await page.goto(file.url, {
       waitUntil: 'networkidle0', // wait for page to load completely
     });
   }
 
-  if ( debug ) {
-    console.log(`Debug: options before promise: `, options)
+  if ( custom.logging ) {
+    console.log(`Logging: options before promise: `, options)
   }
 
   return Promise.props(page.pdf(options))
@@ -95,7 +97,15 @@ async function generatePdf({file, options, callback, testoption1= false, testopt
     }).asCallback(callback);
 }
 
-async function generatePdfs(files, options, callback, debug = false) {
+async function generatePdfs({
+  files, 
+  options, 
+  callback, 
+  custom = { 
+    logging : false , // to have extra logs while working, debugging issues
+    customHeightDivisor : false, // 75 is default when singlePage is on, but can be customized to fit needs
+  } 
+}) {
   // we are using headless mode
   // let args = [
   //   '--no-sandbox',
@@ -106,8 +116,9 @@ async function generatePdfs(files, options, callback, debug = false) {
   //   delete options.args;
   // }
 
-  if( debug ){
-    console.log(`Debug: `, debug)
+  if( custom.logging ){
+    console.log(`Custom.logging: ${custom.logging}`)
+    console.log(`Custom: `, custom)
     console.log(`Callback: `, callback)
     console.log(`Options: `, options)
     console.log(`File: `, file)
@@ -126,24 +137,24 @@ async function generatePdfs(files, options, callback, debug = false) {
   for(let file of files) {
     if(file.content) {
 
-      if ( debug ){
+      if ( custom.logging ){
         console.log(`Compiling the template with no handlebars`)
-        console.log(`Debug: received content: ${file.content}`)
+        console.log(`Logging: received content: ${file.content}`)
       }
       // we have compile our code with handlebars
       const template = hb.compile(file.content, { strict: true });
       const result = template(file.content);
       const html = result;
 
-      if ( debug ){
-        console.log(`Debug: resulting html: ${html}`)
+      if ( custom.logging ){
+        console.log(`Logging: resulting html: ${html}`)
       }
       // We set the page content as the generated html by handlebars
       await page.setContent(html);
     } else {
-      if ( debug ){
+      if ( custom.logging ){
         console.log(`Compiling the template with no handlebars`)
-        console.log(`Debug: received url: ${file.url}`)
+        console.log(`Logging: received url: ${file.url}`)
       }
       await page.goto(file.url, {
         waitUntil: 'networkidle0', // wait for page to load completely
