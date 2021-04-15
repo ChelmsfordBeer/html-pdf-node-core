@@ -65,8 +65,10 @@ async function generatePdf({
     
     if ( logging ){
       console.log(`Logging: resulting html: ${html}`)
-      const tempHeight = await page.evaluate(() => document.documentElement.scrollHeight)
-      console.log(`Logging: resulting height outside SinglePage option: ${tempHeight}`)
+      const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight)
+      const offsetHeight = await page.evaluate(() => document.documentElement.offsetHeight)
+      console.log(`Logging: resulting scrollHeight outside SinglePage option: ${scrollHeight}`)
+      console.log(`Logging: resulting offsetHeight outside SinglePage option: ${offsetHeight}`)
     }
       // Get the "viewport" of the page, as reported by the page.
     if ( singlePage === true ){
