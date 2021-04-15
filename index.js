@@ -9,8 +9,10 @@ async function generatePdf({
   options, 
   callback, 
   custom = { 
-    logging : false , // to have extra logs while working, debugging issues
+    logging : false, // to have extra logs while working, debugging issues
+    singlePage : false,
     customHeightDivisor : false, // 85 is default when singlePage is on, but can be customized to fit needs
+    minimumHeight: false, // num in inches to make smaller than minimumHeight pages, be this minimum height
   } }) {
 
   // we are using headless mode
@@ -22,9 +24,15 @@ async function generatePdf({
   //   args = options.args;
   //   delete options.args;
   // }
+  const {
+    logging,
+    singlePage,
+    customHeightDivisor, 
+    minimumHeight,
+  } = custom // deconstruct these for ease of reading
 
-  if( custom.logging ){
-    console.log(`Custom.logging: ${custom.logging}`)
+  if( logging ){
+    console.log(`Logging: ${logging}`)
     console.log(`Custom: `, custom)
     console.log(`Callback: `, callback)
     console.log(`Options: `, options)
@@ -43,7 +51,7 @@ async function generatePdf({
 
   if(file.content) {
 
-    if ( custom.logging ) {
+    if ( logging ) {
       console.log(`Compiling the template with handlebars`)
       console.log(`Logging: received file: ${file.content}`)
     }
@@ -52,23 +60,41 @@ async function generatePdf({
     const result = template(file.content);
     const html = result;
 
-    if ( custom.logging ){
-      console.log(`Logging: resulting html: ${html}`)
-    }
-
     // We set the page content as the generated html by handlebars
     await page.setContent(html);
-
+    
+    if ( logging ){
+      console.log(`Logging: resulting html: ${html}`)
+      const tempHeight = await page.evaluate(() => document.documentElement.scrollHeight)
+      console.log(`Logging: resulting height outside SinglePage option: ${tempHeight}`)
+    }
       // Get the "viewport" of the page, as reported by the page.
-    if ( options.singlePage === true ){
+    if ( singlePage === true ){
 
       const temp = await page.evaluate(() => document.documentElement.scrollHeight)
+      const calculatedHeight = temp / ( customHeightDivisor !== false ? customHeightDivisor : 75 )
+      let finalHeight
 
-      if ( custom.logging ) {
+      if ( logging ) {
+        console.log(`Inside SinglePage option`)
         console.log(`Logging: temp height: ${temp}`)
       }
 
-      options.height = `${ temp / ( custom.customHeightDivisor !== false ? custom.customHeightDivisor : 75) }in`
+      if ( minimumHeight !== false ) { 
+            // Clarity : this side will give us the total height of the current HTML // 
+        if (  calculatedHeight > minimumHeight ){
+          // If calculated is bigger than minimunHeight 
+          finalHeight = calculatedHeight
+        } else if ( calculatedHeight < minimumHeight ) {
+          // if minimum is bigger than calculated
+          finalHeight = minimumHeight
+        } else {
+          // if they are the same just assign either
+          finalHeight = minimumHeight
+        }
+      }
+
+      options.height = `${ finalHeight }in`
       
       if ( options.format !== undefined) {
         options.format = undefined
@@ -77,7 +103,7 @@ async function generatePdf({
     }
 
   } else {
-    if ( custom.logging ){
+    if ( logging ){
       console.log(`Logging: received url: ${file.url}`)
     }
     await page.goto(file.url, {
@@ -85,7 +111,7 @@ async function generatePdf({
     });
   }
 
-  if ( custom.logging ) {
+  if ( logging ) {
     console.log(`Logging: options before promise: `, options)
   }
 
@@ -97,7 +123,7 @@ async function generatePdf({
     }).asCallback(callback);
 }
 
-async function generatePdfs({
+async function generatePdfs({ // needs to be updated
   files, 
   options, 
   callback, 
