@@ -65,10 +65,11 @@ async function generatePdf({
     const html = result;
 
     // We set the page content as the generated html by handlebars
-    await page.setContent(html);
+    await page.setContent(html, { waitUntil: 'domcontentloaded' })
+    await page.waitForNavigation()
     
     if ( logging ){
-      console.log(`Logging: resulting html: ${html}`)
+      logContent && console.log(`Logging: resulting html: ${html}`)
       let scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight)
       let offsetHeight = await page.evaluate(() => document.documentElement.offsetHeight)
       console.log(`Logging: resulting scrollHeight outside SinglePage option: ${scrollHeight}`)
