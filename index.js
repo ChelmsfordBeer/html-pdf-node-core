@@ -64,9 +64,13 @@ async function generatePdf({
     const result = template(file.content);
     const html = result;
 
+    if ( logging ){
+      console.log(`Before setContent await`)
+    }
+
     // We set the page content as the generated html by handlebars
     await page.setContent(html, { waitUntil: 'domcontentloaded' })
-    await page.waitForNavigation()
+    // await page.waitForNavigation()
     
     if ( logging ){
       logContent && console.log(`Logging: resulting html: ${html}`)
