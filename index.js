@@ -10,6 +10,7 @@ async function generatePdf({
   callback, 
   custom = { 
     logging : false, // to have extra logs while working, debugging issues
+    logContent : false, // to Log content of file, as it can be long or complex
     singlePage : false,
     customHeightDivisor : false, // 85 is default when singlePage is on, but can be customized to fit needs
     minimumHeight: false, // num in inches to make smaller than minimumHeight pages, be this minimum height
@@ -26,6 +27,7 @@ async function generatePdf({
   // }
   const {
     logging,
+    logContent,
     singlePage,
     customHeightDivisor, 
     minimumHeight,
@@ -36,7 +38,9 @@ async function generatePdf({
     console.log(`Custom: `, custom)
     console.log(`Callback: `, callback)
     console.log(`Options: `, options)
-    console.log(`File: `, file)
+    if ( logContent ){
+      console.log(`File: `, file)
+    }
   }
 
   const browser = await chromium.puppeteer.launch({
@@ -51,7 +55,7 @@ async function generatePdf({
 
   if(file.content) {
 
-    if ( logging ) {
+    if ( logging && logContent ) {
       console.log(`Compiling the template with handlebars`)
       console.log(`Logging: received file: ${file.content}`)
     }
@@ -65,16 +69,16 @@ async function generatePdf({
     
     if ( logging ){
       console.log(`Logging: resulting html: ${html}`)
-      const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight)
-      const offsetHeight = await page.evaluate(() => document.documentElement.offsetHeight)
+      let scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight)
+      let offsetHeight = await page.evaluate(() => document.documentElement.offsetHeight)
       console.log(`Logging: resulting scrollHeight outside SinglePage option: ${scrollHeight}`)
       console.log(`Logging: resulting offsetHeight outside SinglePage option: ${offsetHeight}`)
     }
       // Get the "viewport" of the page, as reported by the page.
     if ( singlePage === true ){
 
-      const temp = await page.evaluate(() => document.documentElement.scrollHeight)
-      const calculatedHeight = temp / ( customHeightDivisor !== false ? customHeightDivisor : 75 )
+      let temp = await page.evaluate(() => document.documentElement.scrollHeight)
+      let calculatedHeight = temp / ( customHeightDivisor !== false ? customHeightDivisor : 75 )
       let finalHeight
 
       if ( logging ) {
