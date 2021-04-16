@@ -13,7 +13,7 @@ async function generatePdf({
     logContent : false, // to Log content of file, as it can be long or complex
     singlePage : false,
     customHeightDivisor : false, // 85 is default when singlePage is on, but can be customized to fit needs
-    minimumHeight: false, // num in inches to make smaller than minimumHeight pages, be this minimum height
+    minimumHeight: false, // num in px to make smaller than minimumHeight pages, be this minimum height
     selector: false, // String,'body > div.class' ,Selector to wait for in case we need something to be visible before printing
     viewport: false, // object: { width: 1920, height: 1080 }
   } }) {
@@ -103,38 +103,29 @@ async function generatePdf({
     if ( logging ){
       logContent && console.log(`Logging: resulting html: ${html}`)
       let scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight)
-      let offsetHeight = await page.evaluate(() => document.documentElement.offsetHeight)
-      console.log(`Logging: resulting scrollHeight outside SinglePage option: ${scrollHeight}`)
-      console.log(`Logging: resulting offsetHeight outside SinglePage option: ${offsetHeight}`)
+      console.log(`Logging: resulting offsetHeight outside SinglePage option: ${scrollHeight}`)
     }
       // Get the "viewport" of the page, as reported by the page.
     if ( singlePage === true ){
 
-      let temp = await page.evaluate(() => document.documentElement.scrollHeight)
-      let calculatedHeight = temp / ( customHeightDivisor !== false ? customHeightDivisor : 75 )
-      let finalHeight
+      let finalHeight = await page.evaluate(() => document.documentElement.scrollHeight)
+      // let scrollHeight = temp / ( customHeightDivisor !== false ? customHeightDivisor : 75 )
+      // not using this naming anymore, settings pixels instead
 
       if ( logging ) {
         console.log(`Inside SinglePage option`)
-        console.log(`Logging: temp height: ${temp}`)
+        console.log(`Logging: temp height: ${scrollHeight}`)
       }
 
       // ! This will not work until we get a height other than 1080
-      if ( minimumHeight !== false ) { 
-            // Clarity : this side will give us the total height of the current HTML // 
-        if (  calculatedHeight > minimumHeight ){
-          // If calculated is bigger than minimunHeight 
-          finalHeight = calculatedHeight
-        } else if ( calculatedHeight < minimumHeight ) {
+      // * Setting the viewport worked !
+      if ( minimumHeight !== false  && ( finalHeight < minimumHeight ) ) { 
           // if minimum is bigger than calculated
           finalHeight = minimumHeight
-        } else {
-          // if they are the same just assign either
-          finalHeight = minimumHeight
-        }
-      }
+          // all other > < cases are irrelevant
+      } 
 
-      options.height = `${ finalHeight }in`
+      options.height = `${ finalHeight }px`
       
       if ( options.format !== undefined) {
         options.format = undefined
