@@ -12,10 +12,11 @@ async function generatePdf({
     logging : false, // to have extra logs while working, debugging issues
     logContent : false, // to Log content of file, as it can be long or complex
     singlePage : false,
-    customHeightDivisor : false, // 85 is default when singlePage is on, but can be customized to fit needs
+    heightScaling : false, // percentage as .99 to make height a tad smaller, used for fine tuning
     minimumHeight: false, // num in px to make smaller than minimumHeight pages, be this minimum height
     selector: false, // String,'body > div.class' ,Selector to wait for in case we need something to be visible before printing
-    viewport: false, // object: { width: 1920, height: 1080 }
+    viewport: false, // object:  ex: { width: 1920, height: 1080 }
+    customPromise : false // object, ex: { waitUntil: <"load"|"domcontentloaded"|"networkidle0"|"networkidle2"|Array> }
   } }) {
 
   // we are using headless mode
@@ -31,10 +32,11 @@ async function generatePdf({
     logging,
     logContent,
     singlePage,
-    customHeightDivisor, 
+    heightScaling, // percentage as .99 to make height a tad smaller, used for fine tuning
     minimumHeight,
     selector, // Selector to wait for in case we need something to be visible before printing
     viewport,
+    // customPromise
   } = custom // deconstruct these for ease of reading
 
   if( logging ){
@@ -44,6 +46,7 @@ async function generatePdf({
     console.log(`Options: `, options )
     console.log(`Selector: `, selector )
     console.log(`Viewport: `, viewport )
+    console.log(`HeighScaling: `, heightScaling )
     if ( logContent ){
       console.log(`File: `, file )
     }
@@ -73,9 +76,8 @@ async function generatePdf({
     if ( logging ){
       console.log(`Before setContent await`)
     }
-
     // We set the page content as the generated html by handlebars
-    await page.setContent(html, { waitUntil: 'domcontentloaded' })
+    await page.setContent(html)
     if ( logging ){
       console.log(`After setContent await`)
     }
@@ -109,8 +111,12 @@ async function generatePdf({
     if ( singlePage === true ){
 
       let finalHeight = await page.evaluate(() => document.documentElement.scrollHeight)
-      // let scrollHeight = temp / ( customHeightDivisor !== false ? customHeightDivisor : 75 )
-      // not using this naming anymore, settings pixels instead
+      
+      if ( heightScaling ){
+        // if heightScaling exists, multiply it by height, otherwise keep final height
+        console.log(`Inside heightScaling option`)
+        finalHeight = finalHeight * heightScaling
+      }
 
       if ( logging ) {
         console.log(`Inside SinglePage option`)
@@ -118,6 +124,7 @@ async function generatePdf({
       }
 
       if ( minimumHeight !== false  && ( finalHeight < minimumHeight ) ) { 
+          console.log(`Inside minimumHeight option`)
           // if minimum is bigger than calculated
           finalHeight = minimumHeight
           // all other > < cases are irrelevant
