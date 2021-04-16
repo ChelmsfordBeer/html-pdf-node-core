@@ -114,11 +114,9 @@ async function generatePdf({
 
       if ( logging ) {
         console.log(`Inside SinglePage option`)
-        console.log(`Logging: temp height: ${scrollHeight}`)
+        console.log(`Logging: temp height: ${finalHeight}`)
       }
 
-      // ! This will not work until we get a height other than 1080
-      // * Setting the viewport worked !
       if ( minimumHeight !== false  && ( finalHeight < minimumHeight ) ) { 
           // if minimum is bigger than calculated
           finalHeight = minimumHeight
