@@ -14,6 +14,8 @@ async function generatePdf({
     singlePage : false,
     customHeightDivisor : false, // 85 is default when singlePage is on, but can be customized to fit needs
     minimumHeight: false, // num in inches to make smaller than minimumHeight pages, be this minimum height
+    selector: false, // String,'body > div.class' ,Selector to wait for in case we need something to be visible before printing
+    viewport: false, // object: { width: 1920, height: 1080 }
   } }) {
 
   // we are using headless mode
@@ -31,15 +33,19 @@ async function generatePdf({
     singlePage,
     customHeightDivisor, 
     minimumHeight,
+    selector, // Selector to wait for in case we need something to be visible before printing
+    viewport,
   } = custom // deconstruct these for ease of reading
 
   if( logging ){
     console.log(`Logging: ${logging}`)
-    console.log(`Custom: `, custom)
-    console.log(`Callback: `, callback)
-    console.log(`Options: `, options)
+    console.log(`Custom: `, custom )
+    console.log(`Callback: `, callback )
+    console.log(`Options: `, options )
+    console.log(`Selector: `, selector )
+    console.log(`Viewport: `, viewport )
     if ( logContent ){
-      console.log(`File: `, file)
+      console.log(`File: `, file )
     }
   }
 
@@ -70,7 +76,29 @@ async function generatePdf({
 
     // We set the page content as the generated html by handlebars
     await page.setContent(html, { waitUntil: 'domcontentloaded' })
-    // await page.waitForNavigation()
+    if ( logging ){
+      console.log(`After setContent await`)
+    }
+    // await page.waitForNavigation() // this timed out
+    if ( viewport ){
+      if ( logging ){
+        console.log(`Before setViewport`)
+      }
+      await page.setViewport(viewport)
+      if ( logging ){
+        console.log(`After setViewport`)
+      }
+    }
+
+    if ( selector ){
+      if ( logging ){
+        console.log(`Before selector await`)
+      }
+      await page.waitForSelector(selector)
+      if ( logging ){
+        console.log(`After selector await`)
+      }
+    }
     
     if ( logging ){
       logContent && console.log(`Logging: resulting html: ${html}`)
@@ -91,6 +119,7 @@ async function generatePdf({
         console.log(`Logging: temp height: ${temp}`)
       }
 
+      // ! This will not work until we get a height other than 1080
       if ( minimumHeight !== false ) { 
             // Clarity : this side will give us the total height of the current HTML // 
         if (  calculatedHeight > minimumHeight ){
