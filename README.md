@@ -12,7 +12,7 @@ The goal fo this fork is to make use of pupeteer-core instead of pupeteer, also 
 ## Installation
 
 ```sh
-npm install html-pdf-node-core
+npm install @ChelmsfordBeer/html-pdf-node-core
 ```
 
 ## Usage
@@ -20,7 +20,7 @@ npm install html-pdf-node-core
 To convert `HTML` page to `PDF` using `generatePdf` method:
 
 ```js
-var html_to_pdf = require('html-pdf-node');
+var html_to_pdf = require('@ChelmsfordBeer/html-pdf-node-core');
 
 let options = { format: 'A4' };
 // Example of options with args //

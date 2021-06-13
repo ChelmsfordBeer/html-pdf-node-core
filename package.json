@@ -1,6 +1,6 @@
 {
-  "name": "html-pdf-node-core",
-  "version": "0.3.3",
+  "name": "@chelmsfordbeer/html-pdf-node-core",
+  "version": "0.4.0",
   "description": "Convert any html content or html page to PDF within a AWS lambda",
   "main": "index.js",
   "directories": {
@@ -9,10 +9,9 @@
   "scripts": {
     "test": "mocha tests/*.js -R spec --ui bdd --timeout 5000"
   },
-  "author": "MindInsky <https://github.com/MindInSky>",
+  "author": "Chelmsford Beer & Cider Festivals <https://github.com/ChelmsfordBeer>",
   "license": "ISC",
   "dependencies": {
-    "bluebird": "^3.7.2",
     "chrome-aws-lambda": "^5.5.0",
     "handlebars": "^4.7.6",
     "puppeteer-core": "^5.5.0"
@@ -36,7 +35,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MindInSky/html-pdf-node-core.git"
+    "url": "git+https://github.com/ChelmsfordBeer/html-pdf-node-core.git"
   },
-  "homepage": "https://github.com/MindInSky/html-pdf-node-core#html-pdf-node"
+  "homepage": "https://github.com/ChelmsfordBeer/html-pdf-node-core#html-pdf-node",
+  "bugs": {
+    "url": "https://github.com/ChelmsfordBeer/html-pdf-node-core/issues"
+  }
 }

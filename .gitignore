@@ -27,3 +27,5 @@ someOtherfoler/
 *.tar
 *.zip
 
+# Snyk Audit
+.dccache
