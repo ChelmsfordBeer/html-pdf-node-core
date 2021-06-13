@@ -70,11 +70,11 @@ async function generatePdf({
       console.log(`Logging: received file: ${file.content}`);
     }
     // we have compile our code with handlebars
-    const template = hb.compile(file.content, {
-      strict: true
-    });
-    const result = template(file.content);
-    const html = result;
+    // const template = hb.compile(file.content, {
+    //   strict: true
+    // });
+    // const result = template(file.content);
+    const html = file.content;
 
     if (logging) {
       console.log(`Before setContent await`);
