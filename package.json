@@ -12,6 +12,7 @@
   "author": "Chelmsford Beer & Cider Festivals <https://github.com/ChelmsfordBeer>",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "^3.7.2",
     "chrome-aws-lambda": "^5.5.0",
     "handlebars": "^4.7.6",
     "puppeteer-core": "^5.5.0"

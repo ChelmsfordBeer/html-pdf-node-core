@@ -1,4 +1,5 @@
 /* jshint esversion:8 */
+const Bluebird = require('bluebird');
 const hb = require('handlebars');
 const puppeteer = require('puppeteer-core');
 const chromium = require('chrome-aws-lambda');
@@ -156,7 +157,7 @@ async function generatePdf({
     console.log(`Logging: options before promise: `, options);
   }
 
-  return Promise.props(page.pdf(options))
+  return Bluebird.props(page.pdf(options))
     // deepcode ignore PromiseNotCaughtNode
     .then(async function (data) {
       await browser.close();
@@ -235,7 +236,7 @@ async function generatePdfs({ // needs to be updated
     pdfObj.buffer = Buffer.from(Object.values(await page.pdf(options)));
     pdfs.push(pdfObj);
   }
-  return Promise.resolve(pdfs)
+  return Bluebird.resolve(pdfs)
     // deepcode ignore PromiseNotCaughtNode
     .then(async function (data) {
       await browser.close();
