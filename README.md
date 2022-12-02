@@ -20,7 +20,7 @@ npm install @chelmsfordbeer/html-pdf-node-core
 To convert `HTML` page to `PDF` using `generatePdf` method:
 
 ```js
-var html_to_pdf = require('@chelmsfordbeer/html-pdf-node-core');
+const html_to_pdf = require('@chelmsfordbeer/html-pdf-node-core');
 
 let options = { format: 'A4' };
 // Example of options with args //
@@ -117,7 +117,8 @@ Promise which resolves with array of object which contains file objects with PDF
 let options = { format: 'A4' };
 let file = [{ url: "https://example.com", name: 'example.pdf' }];
 
-html_to_pdf.generatePdfs(file, options).then(output => {
-  console.log("PDF Buffer:-", output); // PDF Buffer:- [{url: "https://example.com", name: "example.pdf", buffer: <PDF buffer>}]
-});
+html_to_pdf.generatePdfs(file, options)
+  .then(output => {
+    console.log("PDF Buffer:-", output); // PDF Buffer:- [{url: "https://example.com", name: "example.pdf", buffer: <PDF buffer>}]
+  });
 ```
