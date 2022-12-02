@@ -20,21 +20,22 @@ npm install @chelmsfordbeer/html-pdf-node-core
 To convert `HTML` page to `PDF` using `generatePdf` method:
 
 ```js
-const html_to_pdf = require('@chelmsfordbeer/html-pdf-node-core');
+const htmlToPdf = require('@chelmsfordbeer/html-pdf-node-core');
 
-let options = { format: 'A4' };
+const options = { format: 'A4' };
 // Example of options with args //
-// let options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
+// const options = { format: 'A4', args: ['--no-sandbox', '--disable-setuid-sandbox'] };
 
-let file = { content: "<h1>Welcome to html-pdf-node</h1>" };
+const file = { content: '<h1>Welcome to html-pdf-node</h1>' };
 // or //
-let file = { url: "https://example.com" };
-html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
-  console.log("PDF Buffer:-", pdfBuffer);
-});
+const file = { url: 'https://example.com' };
+htmlToPdf.generatePdf(file, options)
+  .then(pdfBuffer => {
+    console.log('PDF Buffer:-', pdfBuffer);
+  });
 ```
 
-### html_to_pdf.generatePdf ( [file], [options], [callback] )
+### htmlToPdf.generatePdf ( [file], [options], [callback] )
 
 **Parameters**
 
@@ -73,7 +74,7 @@ html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
 
 Promise which resolves with PDF buffer.
 
-### html_to_pdf.generatePdfs ( [files], [options], [callback] )
+### htmlToPdf.generatePdfs ( [files], [options], [callback] )
 
 **Parameters**
 
@@ -114,11 +115,11 @@ Promise which resolves with array of object which contains file objects with PDF
 
 ***Example:***
 ```js
-let options = { format: 'A4' };
-let file = [{ url: "https://example.com", name: 'example.pdf' }];
+const options = { format: 'A4' };
+const file = [{ url: 'https://example.com', name: 'example.pdf' }];
 
-html_to_pdf.generatePdfs(file, options)
+htmlToPdf.generatePdfs(file, options)
   .then(output => {
-    console.log("PDF Buffer:-", output); // PDF Buffer:- [{url: "https://example.com", name: "example.pdf", buffer: <PDF buffer>}]
+    console.log('PDF Buffer:-', output); // PDF Buffer:- [{url: 'https://example.com', name: 'example.pdf', buffer: <PDF buffer>}]
   });
 ```
