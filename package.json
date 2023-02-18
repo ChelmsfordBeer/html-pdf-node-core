@@ -15,7 +15,7 @@
     "bluebird": "^3.7.2",
     "chrome-aws-lambda": "^5.5.0",
     "handlebars": "^4.7.6",
-    "puppeteer-core": "^5.5.0"
+    "puppeteer-core": "^19.6.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
